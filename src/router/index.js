@@ -56,6 +56,71 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
+  // {
+  //   path: '/childAccount',
+  //   component: Layout,
+  //   redirect: '/childAccount/list',
+  //   meta: {
+  //     role: ['admin'],
+  //     title: 'childAccount',
+  //     icon: 'component'
+  //   },
+  //   children: [{
+  //     hidden: true,
+  //     path: 'index',
+  //     component: _import('childAccount/list'),
+  //     name: 'childAccount',
+  //     meta: {
+  //       title: 'childAccount',
+  //       icon: 'lock',
+  //       role: ['form']
+  //     }
+  //   },
+  //
+  //   {
+  //     hidden: true,
+  //     path: 'createChildAccount',
+  //     component: _import('childAccount/create'),
+  //     name: 'createChildAccount',
+  //     meta: {
+  //       title: 'createChildAccount',
+  //       icon: 'table'
+  //     }
+  //   },{
+  //       hidden: true,
+  //       path: 'editChildAccount',
+  //       component: _import('childAccount/edit'),
+  //       name: 'editChildAccount',
+  //       meta: {
+  //         title: 'editChildAccount',
+  //         icon: 'table'
+  //       }
+  //     }]
+  // },
+
+  {
+    path: '/childAccount',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'childAccount',
+    meta: {
+      role: ['admin'],
+      title: 'childAccount',
+      icon: 'form'
+    },
+    children: [
+      { path: 'search-account', component: _import('childAccount/list'), name: 'searchAccount', meta: { title: 'searchAccount', icon: 'table' }},
+      { path: 'create-account', component: _import('childAccount/create'), name: 'createAccount', meta: { title: 'createAccount', icon: 'table' }},
+      { path: 'edit-account', component: _import('childAccount/edit'), name: 'editAccount', meta: { title: 'editAccount', icon: 'table' }}
+    ]
+  },
+
+  // {
+  //   path: '/createChildAccount',
+  //   component: Layout,
+  //   children: [{ path: 'index', component: _import('i18n-demo/index'), name: 'i18n', meta: { title: 'i18n', icon: 'international' }}]
+  // },
+
   {
     path: '/permission',
     component: Layout,

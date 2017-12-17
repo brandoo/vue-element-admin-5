@@ -1,8 +1,12 @@
 export default {
   route: {
-    dashboard: '首页',
+    dashboard: '管理系统',
     introduction: '简述',
     documentation: '文档',
+    childAccount: '子账号管理',
+    searchAccount: '查询子账号',
+    createAccount: '创建子账号',
+    editAccount: '修改/查看子账号',
     permission: '权限测试页',
     icons: '图标',
     components: '组件',
