@@ -49,7 +49,9 @@ const user = {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password).then(response => {
-          const data = response.data
+          const data = response.data.data
+          console.log(data)
+          console.log(data.token)
           commit('SET_TOKEN', data.token)
           setToken(response.data.token)
           resolve()
@@ -66,7 +68,8 @@ const user = {
           if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
             reject('error')
           }
-          const data = response.data
+          const data = response.data.data
+          console.log(data)
           commit('SET_ROLES', data.role)
           commit('SET_NAME', data.name)
           commit('SET_AVATAR', data.avatar)
