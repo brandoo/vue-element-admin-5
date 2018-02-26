@@ -23,7 +23,7 @@
                 <el-col :span="8">
                   <el-tooltip class="item" effect="dark" content="公司名称" placement="top">
                     <el-form-item label-width="80px" label="公司名称:" class="postInfo-container-item">
-                      <el-input placeholder="" style='min-width:150px;' v-model="postForm.source_name">
+                      <el-input placeholder="" style='min-width:150px;' v-model="postForm.name">
                       </el-input>
                     </el-form-item>
                   </el-tooltip>
@@ -41,7 +41,7 @@
                 <el-col :span="8">
                   <el-tooltip class="item" effect="dark" content="联系人姓名" placement="top">
                     <el-form-item label-width="90px" label="联系人姓名:" class="postInfo-container-item">
-                      <el-input placeholder="" style='min-width:150px;' v-model="postForm.source_name">
+                      <el-input placeholder="" style='min-width:150px;' v-model="postForm.contactName">
                       </el-input>
                     </el-form-item>
                   </el-tooltip>
@@ -49,7 +49,7 @@
                 <el-col :span="8">
                   <el-tooltip class="item" effect="dark" content="手机" placement="top">
                     <el-form-item label-width="50px" label="手机:" class="postInfo-container-item">
-                      <el-input placeholder="" style='min-width:150px;' v-model="postForm.source_name">
+                      <el-input placeholder="" style='min-width:150px;' v-model="postForm.mobilePhone">
                       </el-input>
                     </el-form-item>
                   </el-tooltip>
@@ -57,7 +57,7 @@
                 <el-col :span="8">
                   <el-tooltip class="item" effect="dark" content="固定电话" placement="top">
                     <el-form-item label-width="80px" label="固定电话:" class="postInfo-container-item">
-                      <el-input placeholder="" style='min-width:150px;' v-model="postForm.source_name">
+                      <el-input placeholder="" style='min-width:150px;' v-model="postForm.telephone">
                       </el-input>
                     </el-form-item>
                   </el-tooltip>
@@ -75,7 +75,7 @@
                 <el-col :span="8">
                   <el-tooltip class="item" effect="dark" content="账户名" placement="top">
                     <el-form-item label-width="70px" label="账户名:" class="postInfo-container-item">
-                      <el-input placeholder="" style='min-width:150px;' v-model="postForm.source_name">
+                      <el-input placeholder="" style='min-width:150px;' v-model="postForm.username">
                       </el-input>
                     </el-form-item>
                   </el-tooltip>
@@ -83,7 +83,7 @@
                 <el-col :span="8">
                   <el-tooltip class="item" effect="dark" content="密码" placement="top">
                     <el-form-item label-width="50px" label="密码:" class="postInfo-container-item">
-                      <el-input placeholder="" style='min-width:150px;' v-model="postForm.source_name">
+                      <el-input placeholder="" style='min-width:150px;' v-model="postForm.password">
                       </el-input>
                     </el-form-item>
                   </el-tooltip>
@@ -101,12 +101,12 @@
                 <el-col :span="15">
                   <el-form-item label-width="70px" label="接口权限" class="postInfo-container-item">
                     <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">Search</el-checkbox>
-                    <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+                    <el-checkbox-group v-model="postForm.privilege.search" @change="handleCheckedCitiesChange">
                       <el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
                     </el-checkbox-group>
 
                     <el-checkbox :indeterminate="isFareIndeterminate" v-model="checkFareAll" @change="handleCheckFareAllChange">运价</el-checkbox>
-                    <el-checkbox-group v-model="checkedFares" @change="handleCheckedFaresChange">
+                    <el-checkbox-group v-model="postForm.privilege.fare" @change="handleCheckedFaresChange">
                       <el-checkbox v-for="fare in fares" :label="fare" :key="fare">{{fare}}</el-checkbox>
                     </el-checkbox-group>
                   </el-form-item>
@@ -128,18 +128,22 @@
   import { fetchArticle } from '@/api/article'
   import { validateURL } from '@/utils/validate'
 
-  const defaultForm = {
+  const purchaser = {
     status: 'draft',
-    title: '', // 文章题目
-    content: '', // 文章内容
-    content_short: '', // 文章摘要
-    source_uri: '', // 文章外链
-    image_uri: '', // 文章图片
-    source_name: '', // 文章外部作者
-    display_time: undefined, // 前台展示时间
-    id: undefined,
-    platforms: ['a-platform'],
-    comment_disabled: false
+    openId: '',
+    name: '',
+    contactName: '',
+    mobilePhone: '',
+    telephone: '',
+    username: '',
+    password: '',
+    privilege: {
+      search: [],
+      fare: []
+    }
+//    display_time: undefined, // 前台展示时间
+//    platforms: ['a-platform'],
+//    comment_disabled: false
   }
   const cityOptions = ['丝绸之路', '京杭', 'FD+AV', 'NFD+AV']
   const fareOptions = ['FD', 'NFD']
@@ -181,7 +185,7 @@
         }
       }
       return {
-        postForm: Object.assign({}, defaultForm),
+        postForm: Object.assign({}, purchaser),
         fetchSuccess: true,
         loading: false,
         userLIstOptions: [],
@@ -243,7 +247,7 @@
       if (this.isEdit) {
         this.fetchData()
       } else {
-        this.postForm = Object.assign({}, defaultForm)
+        this.postForm = Object.assign({}, purchaser)
       }
     },
     methods: {
@@ -264,24 +268,24 @@
         this.getList()
       },
       submitForm() {
-        this.postForm.display_time = parseInt(this.display_time / 1000)
+//        this.postForm.display_time = parseInt(this.display_time / 1000)
         console.log(this.postForm)
-        this.$refs.postForm.validate(valid => {
-          if (valid) {
-            this.loading = true
-            this.$notify({
-              title: '成功',
-              message: '发布文章成功',
-              type: 'success',
-              duration: 2000
-            })
-            this.postForm.status = 'published'
-            this.loading = false
-          } else {
-            console.log('error submit!!')
-            return false
-          }
-        })
+//        this.$refs.postForm.validate(valid => {
+//          if (valid) {
+//            this.loading = true
+//            this.$notify({
+//              title: '成功',
+//              message: '发布文章成功',
+//              type: 'success',
+//              duration: 2000
+//            })
+//            this.postForm.status = 'published'
+//            this.loading = false
+//          } else {
+//            console.log('error submit!!')
+//            return false
+//          }
+//        })
       },
       draftForm() {
         if (this.postForm.content.length === 0 || this.postForm.title.length === 0) {
@@ -313,7 +317,7 @@
         this.isIndeterminate = false
       },
       handleCheckedCitiesChange(value) {
-        let checkedCount = value.length
+        const checkedCount = value.length
         this.checkAll = checkedCount === this.cities.length
         this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length
       }
