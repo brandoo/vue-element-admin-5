@@ -125,8 +125,10 @@
 <script>
   import Sticky from '@/components/Sticky' // 粘性header组件
   import { userSearch } from '@/api/remoteSearch'
-  import { fetchArticle } from '@/api/article'
+  import { fetchArticle, savePurchaser } from '@/api/article'
   import { validateURL } from '@/utils/validate'
+//  import http from '@/utils/http'
+//  import { api } from '@/utils/api'
 
   const purchaser = {
     status: 'draft',
@@ -250,6 +252,8 @@
         this.postForm = Object.assign({}, purchaser)
       }
     },
+    mounted() {
+    },
     methods: {
       fetchData() {
         fetchArticle().then(response => {
@@ -268,24 +272,8 @@
         this.getList()
       },
       submitForm() {
-//        this.postForm.display_time = parseInt(this.display_time / 1000)
         console.log(this.postForm)
-//        this.$refs.postForm.validate(valid => {
-//          if (valid) {
-//            this.loading = true
-//            this.$notify({
-//              title: '成功',
-//              message: '发布文章成功',
-//              type: 'success',
-//              duration: 2000
-//            })
-//            this.postForm.status = 'published'
-//            this.loading = false
-//          } else {
-//            console.log('error submit!!')
-//            return false
-//          }
-//        })
+        savePurchaser(this.postForm)
       },
       draftForm() {
         if (this.postForm.content.length === 0 || this.postForm.title.length === 0) {

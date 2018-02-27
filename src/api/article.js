@@ -38,3 +38,11 @@ export function updateArticle(data) {
     data
   })
 }
+
+export function savePurchaser(datas) {
+  return request({
+    url: '/api/purchaser/save',
+    method: 'post',
+    data: { 'purchaserS': datas }
+  })
+}
