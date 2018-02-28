@@ -127,6 +127,8 @@
   import { userSearch } from '@/api/remoteSearch'
   import { fetchArticle, savePurchaser } from '@/api/article'
   import { validateURL } from '@/utils/validate'
+//  import http from '@/utils/http'
+//  import { api } from '@/utils/api'
 
   const purchaser = {
     status: 'draft',
@@ -249,6 +251,8 @@
       } else {
         this.postForm = Object.assign({}, purchaser)
       }
+    },
+    mounted() {
     },
     methods: {
       fetchData() {
