@@ -114,6 +114,26 @@ export const asyncRouterMap = [
       { path: 'edit-account', component: _import('childAccount/edit'), name: 'editAccount', meta: { title: 'editAccount', icon: 'table' }}
     ]
   },
+  {
+    path: '/fareManage',
+    component: Layout,
+    redirect: '/fareManage/index',
+    name: 'childAccount',
+    meta: {
+      role: ['admin'],
+      title: 'fareManage'
+    },
+    children: [{
+      path: 'index',
+      component: _import('fareManage/index'),
+      name: 'fareManage',
+      meta: {
+        title: 'fareManage',
+        icon: 'form',
+        role: ['admin']
+      }
+    }]
+  },
 
   // {
   //   path: '/createChildAccount',

@@ -3,6 +3,7 @@ export default {
     dashboard: '管理系统',
     introduction: '简述',
     documentation: '文档',
+    fareManage: '运价库管理',
     childAccount: '子账号管理',
     searchAccount: '查询子账号',
     createAccount: '创建子账号',
