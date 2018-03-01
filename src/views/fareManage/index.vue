@@ -75,7 +75,7 @@
       </div>
     </el-form>
 
-    <el-table :data="tableData" border stripe style="width: 98%;margin: 0 auto;">
+    <el-table :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border stripe style="width: 98%;margin: 0 auto;">
       <el-table-column
         prop="name"
         label="出发机场三字码"
@@ -145,13 +145,16 @@
 </template>
 
 <script>
+import { fetchList } from '@/api/fareManage'
 import { mapGetters } from 'vuex'
 
 export default{
   name: 'permission',
   data() {
     return {
-      listLoading: false,
+      listLoading: true,
+      list: null,
+      total: null,
       postForm: {},
       tableData: [{
         date: '2016-05-02 11:22:11',
@@ -184,6 +187,9 @@ export default{
       }
     }
   },
+  created() {
+    this.getList()
+  },
   methods: {
     handleSizeChange(val) {
       this.listQuery.limit = val
@@ -194,6 +200,12 @@ export default{
       this.getList()
     },
     getList() {
+      this.listLoading = true
+      fetchList(this.listQuery).then(response => {
+        this.list = response.data.items
+        this.total = response.data.total
+        this.listLoading = false
+      })
     }
   },
   computed: {
