@@ -42,7 +42,7 @@ export function updateArticle(data) {
 
 export function savePurchaser(data) {
   return request({
-    url: '/api/purchaser/save',
+    url: '/purchaser/save',
     method: 'post',
     data: qs.stringify(data)
   })

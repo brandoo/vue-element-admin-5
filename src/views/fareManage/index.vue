@@ -14,7 +14,7 @@
                 <el-col :span="8">
                   <el-tooltip class="item" effect="dark" content="出发地三字码" placement="top">
                     <el-form-item label-width="120px" label="出发地三字码:" class="postInfo-container-item">
-                      <el-input placeholder="" style='min-width:50px;' v-model="postForm.source_name">
+                      <el-input placeholder="" style='min-width:50px;' v-model="listQuery.departCode">
                       </el-input>
                     </el-form-item>
                   </el-tooltip>
@@ -23,7 +23,7 @@
                 <el-col :span="8">
                   <el-tooltip class="item" effect="dark" content="目的地三字码" placement="top">
                     <el-form-item label-width="120px" label="目的地三字码:" class="postInfo-container-item">
-                      <el-input placeholder="" style='min-width:50px;' v-model="postForm.source_name">
+                      <el-input placeholder="" style='min-width:50px;' v-model="listQuery.arriveCode">
                       </el-input>
                     </el-form-item>
                   </el-tooltip>
@@ -32,11 +32,10 @@
                 <el-col :span="8">
                   <el-tooltip class="item" effect="dark" content="运价源" placement="top">
                     <el-form-item label-width="80px" label="运价源:" class="postInfo-container-item">
-                      <el-select placeholder="请选择" style='min-width:150px;' v-model="postForm.source_name">
+                      <el-select placeholder="请选择" style='min-width:150px;' v-model="listQuery.fareSource">
                         <el-option
-                          v-for="item in postForm.source_name"
+                          v-for="item in fareSource"
                           :key="item.value"
-                          :label="item.label"
                           :value="item.value">
                         </el-option>
                       </el-select>
@@ -49,7 +48,7 @@
                 <el-col :span="8">
                   <el-tooltip class="item" effect="dark" content="航司" placement="top">
                     <el-form-item label-width="120px" label="航司:" class="postInfo-container-item">
-                      <el-input placeholder="" style='min-width:50px;' v-model="postForm.source_name">
+                      <el-input placeholder="" style='min-width:50px;' v-model="listQuery.airline">
                       </el-input>
                     </el-form-item>
                   </el-tooltip>
@@ -58,7 +57,7 @@
                 <el-col :span="8">
                   <el-tooltip class="item" effect="dark" content="舱位" placement="top">
                     <el-form-item label-width="120px" label="舱位:" class="postInfo-container-item">
-                      <el-input placeholder="" style='min-width:50px;' v-model="postForm.source_name">
+                      <el-input placeholder="" style='min-width:50px;' v-model="listQuery.cabin">
                       </el-input>
                     </el-form-item>
                   </el-tooltip>
@@ -77,52 +76,52 @@
 
     <el-table :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border stripe style="width: 98%;margin: 0 auto;">
       <el-table-column
-        prop="name"
+        prop="departCode"
         label="出发机场三字码"
         width="100">
       </el-table-column>
       <el-table-column
-        prop="username"
+        prop="arriveCode"
         width="100"
         label="目的机场三字码">
       </el-table-column>
       <el-table-column
-        prop="username"
+        prop="airline"
         label="航司"
         width="100">
       </el-table-column>
       <el-table-column
-        prop="status"
+        prop="cabin"
         width="100"
         label="舱位">
       </el-table-column>
       <el-table-column
-        prop="username"
+        prop="price"
         label="价格"
         width="100">
       </el-table-column>
       <el-table-column
-        prop="status"
+        prop="fareSource"
         width="100"
         label="运价源">
       </el-table-column>
       <el-table-column
-        prop="date"
+        prop="crawlTime"
         label="爬取时间"
         width="160">
       </el-table-column>
       <el-table-column
-        prop="date"
+        prop="fareValidStartTime"
         width="160"
         label="运价有效起始时间">
       </el-table-column>
       <el-table-column
-        prop="date"
+        prop="fareValidEndTime"
         label="运价有效截止时间"
         width="160">
       </el-table-column>
       <el-table-column
-        prop="status"
+        prop="aheadIssueDay"
         width="100"
         label="提前开票天数">
       </el-table-column>
@@ -156,34 +155,18 @@ export default{
       list: null,
       total: null,
       postForm: {},
-      tableData: [{
-        date: '2016-05-02 11:22:11',
-        name: 'BKK',
-        username: 'BKK',
-        status: 'aaa'
-      }, {
-        date: '2016-05-04',
-        name: 'BKK',
-        username: 'BKK',
-        status: 'aaa'
-      }, {
-        date: '2016-05-01 11:22:11',
-        name: '王小虎',
-        username: 'BKK',
-        status: 'aaa'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        username: 'BKK',
-        status: 'aaa'
-      }],
+      fareSource: [
+        { value: 'FD' },
+        { value: 'NFD' },
+      ],
       listQuery: {
         page: 1,
         limit: 20,
-        importance: undefined,
-        title: undefined,
-        type: undefined,
-        sort: '+id'
+        departCode: undefined,
+        arriveCode: undefined,
+        fareSource: [],
+        airline: undefined,
+        cabin: undefined
       }
     }
   },
@@ -191,6 +174,10 @@ export default{
     this.getList()
   },
   methods: {
+    handleFilter() {
+      this.listQuery.page = 1
+      this.getList()
+    },
     handleSizeChange(val) {
       this.listQuery.limit = val
       this.getList()
@@ -202,8 +189,9 @@ export default{
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
+        console.log(response.data)
+        this.list = response.data.data.items
+        this.total = response.data.data.total
         this.listLoading = false
       })
     }

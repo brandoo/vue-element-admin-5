@@ -3,9 +3,9 @@ import qs from 'qs'
 
 export function fetchList(query) {
   return request({
-    url: '/fareManage/list',
-    method: 'get',
-    params: query
+    url: '/fareRepertory/list',
+    method: 'post',
+    data: qs.stringify(query)
   })
 }
 
