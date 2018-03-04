@@ -1,10 +1,5 @@
 <template>
   <div class="app-container">
-    <!--<div style="margin-bottom:15px;">你的权限： {{roles}}</div>-->
-    <!--切换权限：-->
-    <!--<el-radio-group v-model="role">-->
-      <!--<el-radio-button label="editor"></el-radio-button>-->
-    <!--</el-radio-group>-->
     <el-form class="form-container" :model="postForm" ref="postForm">
       <div class="createPost-main-container">
         <el-row>
@@ -144,69 +139,62 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/fareManage'
-import { mapGetters } from 'vuex'
+  import { fetchList } from '@/api/fareManage'
+  import { mapGetters } from 'vuex'
 
-export default{
-  name: 'permission',
-  data() {
-    return {
-      listLoading: true,
-      list: null,
-      total: null,
-      postForm: {},
-      fareSource: [
-        { value: 'FD' },
-        { value: 'NFD' }
-      ],
-      listQuery: {
-        page: 1,
-        limit: 20,
-        departCode: undefined,
-        arriveCode: undefined,
-        fareSource: [],
-        airline: undefined,
-        cabin: undefined
+  export default{
+    name: 'permission',
+    data() {
+      return {
+        listLoading: true,
+        list: null,
+        total: null,
+        postForm: {},
+        fareSource: [
+          { value: 'FD' },
+          { value: 'NFD' }
+        ],
+        listQuery: {
+          page: 1,
+          limit: 20,
+          departCode: undefined,
+          arriveCode: undefined,
+          fareSource: [],
+          airline: undefined,
+          cabin: undefined
+        }
       }
-    }
-  },
-  created() {
-    this.getList()
-  },
-  methods: {
-    handleFilter() {
-      this.listQuery.page = 1
+    },
+    created() {
       this.getList()
     },
-    handleSizeChange(val) {
-      this.listQuery.limit = val
-      this.getList()
+    methods: {
+      handleFilter() {
+        this.listQuery.page = 1
+        this.getList()
+      },
+      handleSizeChange(val) {
+        this.listQuery.limit = val
+        this.getList()
+      },
+      handleCurrentChange(val) {
+        this.listQuery.page = val
+        this.getList()
+      },
+      getList() {
+        this.listLoading = true
+        fetchList(this.listQuery).then(response => {
+          console.log(response.data)
+          this.list = response.data.data.items
+          this.total = response.data.data.total
+          this.listLoading = false
+        })
+      }
     },
-    handleCurrentChange(val) {
-      this.listQuery.page = val
-      this.getList()
-    },
-    getList() {
-      this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        console.log(response.data)
-        this.list = response.data.data.items
-        this.total = response.data.data.total
-        this.listLoading = false
-      })
-    }
-  },
-  computed: {
-    ...mapGetters([
-      'roles'
-    ])
-  },
-  watch: {
-    role(val) {
-      this.$store.dispatch('ChangeRole', val).then(() => {
-        this.$router.push({ path: '/permission/index?' + +new Date() })
-      })
+    computed: {
+      ...mapGetters([
+        'roles'
+      ])
     }
   }
-}
 </script>

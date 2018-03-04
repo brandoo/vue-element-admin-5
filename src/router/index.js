@@ -136,6 +136,23 @@ export const asyncRouterMap = [
     }]
   },
 
+  {
+    path: '/baseDataManage',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'baseDataManage',
+    meta: {
+      role: ['admin'],
+      title: 'baseDataManage',
+      icon: 'form'
+    },
+    children: [
+      { path: 'airport-city', component: _import('baseDataManage/airportCity/list'), name: 'airportCity', meta: { title: 'airportCity', icon: 'table' }},
+      { path: 'air-line', component: _import('baseDataManage/airline/list'), name: 'airline', meta: { title: 'airline', icon: 'table' }},
+      { path: 'air-route', component: _import('baseDataManage/airRoute/list'), name: 'airRoute', meta: { title: 'airRoute', icon: 'table' }}
+    ]
+  },
+
   // {
   //   path: '/createChildAccount',
   //   component: Layout,
